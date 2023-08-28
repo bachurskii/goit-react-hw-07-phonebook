@@ -1,16 +1,13 @@
-export const App = () => {
+import React from 'react';
+import ContactList from './contactList/contactList';
+
+function App() {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
+    <div className="App">
+      <h1>Contact Book App</h1>
+      <ContactList />
     </div>
   );
-};
+}
+
+export default App;
