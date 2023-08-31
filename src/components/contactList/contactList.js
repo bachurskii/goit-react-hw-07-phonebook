@@ -10,18 +10,40 @@ function ContactList() {
 
   const [newContact, setNewContact] = useState({
     name: '',
-
     phoneNumber: '',
   });
   const [filter, setFilter] = useState('');
+  const [nameNotUnique, setNameNotUnique] = useState(false);
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
-  const handleAddContact = () => {
+  const isContactNameUnique = (contacts, newName) => {
+    const lowerCaseNewName = newName.toLowerCase();
+    return contacts.every(
+      contact => contact.name.toLowerCase() !== lowerCaseNewName
+    );
+  };
+
+  const handleAddContact = event => {
+    event.preventDefault();
+
+    const lowerCaseNewName = newContact.name.toLowerCase();
+
+    if (!isContactNameUnique(contacts, lowerCaseNewName)) {
+      setNameNotUnique(true);
+      return;
+    }
+
     dispatch(addContact(newContact));
-    setNewContact({ name: '', phoneNumber: '' });
+    setNewContact(prevState => ({
+      ...prevState,
+      name: '',
+      phoneNumber: '',
+    }));
+
+    setNameNotUnique(false);
   };
 
   const handleDeleteContact = contactId => {
@@ -45,22 +67,35 @@ function ContactList() {
   return (
     <div>
       <h2>Add Contact</h2>
-      <input
-        type="text"
-        placeholder="Name"
-        value={newContact.name}
-        onChange={e => setNewContact({ ...newContact, name: e.target.value })}
-      />
+      <form onSubmit={handleAddContact}>
+        <input
+          type="text"
+          placeholder="Name"
+          value={newContact.name}
+          onChange={e =>
+            setNewContact(prevState => ({ ...prevState, name: e.target.value }))
+          }
+        />
 
-      <input
-        type="text"
-        placeholder="Phone Number"
-        value={newContact.phoneNumber}
-        onChange={e =>
-          setNewContact({ ...newContact, phoneNumber: e.target.value })
-        }
-      />
-      <button onClick={handleAddContact}>Add Contact</button>
+        <input
+          type="text"
+          placeholder="Phone Number"
+          value={newContact.phoneNumber}
+          onChange={e =>
+            setNewContact(prevState => ({
+              ...prevState,
+              phoneNumber: e.target.value,
+            }))
+          }
+        />
+        <button type="submit">Add Contact</button>
+      </form>
+
+      {nameNotUnique && (
+        <p style={{ color: 'red' }}>
+          This name is already taken. Please choose a unique name.
+        </p>
+      )}
 
       <h2>Filter Contacts</h2>
       <input
@@ -75,7 +110,7 @@ function ContactList() {
           <li key={contact.id}>
             <strong>Name:</strong> {contact.name}
             <br />
-            <strong>Phone:</strong> {contact.phone}
+            <strong>Phone:</strong> {contact.phoneNumber}
             <button onClick={() => handleDeleteContact(contact.id)}>
               Delete
             </button>
