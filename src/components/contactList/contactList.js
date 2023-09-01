@@ -10,7 +10,7 @@ function ContactList() {
 
   const [newContact, setNewContact] = useState({
     name: '',
-    phoneNumber: '',
+    phone: '',
   });
   const [filter, setFilter] = useState('');
   const [nameNotUnique, setNameNotUnique] = useState(false);
@@ -40,7 +40,7 @@ function ContactList() {
     setNewContact(prevState => ({
       ...prevState,
       name: '',
-      phoneNumber: '',
+      phone: '',
     }));
 
     setNameNotUnique(false);
@@ -80,11 +80,11 @@ function ContactList() {
         <input
           type="text"
           placeholder="Phone Number"
-          value={newContact.phoneNumber}
+          value={newContact.phone}
           onChange={e =>
             setNewContact(prevState => ({
               ...prevState,
-              phoneNumber: e.target.value,
+              phone: e.target.value,
             }))
           }
         />
@@ -110,7 +110,7 @@ function ContactList() {
           <li key={contact.id}>
             <strong>Name:</strong> {contact.name}
             <br />
-            <strong>Phone:</strong> {contact.phoneNumber}
+            <strong>Phone:</strong> {contact.phone}
             <button onClick={() => handleDeleteContact(contact.id)}>
               Delete
             </button>
